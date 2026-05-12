@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
 import Image from 'next/image'
-import { ChevronRight, ChevronDown, ChevronUp, Check, HelpCircle, ZoomIn, Camera } from 'lucide-react'
+import { ChevronRight, ChevronDown, ChevronUp, Check, HelpCircle } from 'lucide-react'
 import { useLanguage } from '@/context/LanguageContext'
 
 export default function Konfigurator() {
@@ -40,19 +40,19 @@ export default function Konfigurator() {
   }
 
   const profile = [
-    { id: 'revo4000', name: 'REVO 4000', features: ['Kantige Optik', '70 mm Bautiefe', '2 Dichtungen'], discount: '-30%', uw: '0,91', image: '/products/revo 4000/Revolux-4000-webp.webp' },
-    { id: 'revoneo', name: 'REVO neo', features: ['Eckige Optik', '76 mm Bautiefe', '2 Dichtungen'], discount: '-30%', uw: '0,86', image: '/products/revo neo/Revolux-Neo.webp' },
-    { id: 'revo7000', name: 'REVO 7000', features: ['Abgerundete Optik', '70 mm Bautiefe', '3 Dichtungen'], discount: '-20%', uw: '0,87', image: '/products/revo 7000/revolux-prozorski-sistemi-7000.webp' },
-    { id: 'revo8000', name: 'REVO 8000', features: ['Eckige Optik', '76 mm Bautiefe', '3 Dichtungen'], discount: '-25%', uw: '0,83', image: '/products/revo 8000/Revolux-prozorski-sistemi-8000-1.webp' },
+    { id: 'revo4000', name: 'REVO 4000', features: ['Kantige Optik', '70 mm Bautiefe', '2 Dichtungen'], uw: '0,91', image: '/products/revo 4000/Revolux-4000-webp.webp' },
+    { id: 'revoneo', name: 'REVO neo', features: ['Eckige Optik', '76 mm Bautiefe', '2 Dichtungen'], uw: '0,86', image: '/products/revo neo/Revolux-Neo.webp' },
+    { id: 'revo7000', name: 'REVO 7000', features: ['Abgerundete Optik', '70 mm Bautiefe', '3 Dichtungen'], uw: '0,87', image: '/products/revo 7000/revolux-prozorski-sistemi-7000.webp' },
+    { id: 'revo8000', name: 'REVO 8000', features: ['Eckige Optik', '76 mm Bautiefe', '3 Dichtungen'], uw: '0,83', image: '/products/revo 8000/Revolux-prozorski-sistemi-8000-1.webp' },
   ]
 
   const farben = [
-    { id: 'weiss', name: 'Weiß', color: '#ffffff', extra: '' },
-    { id: 'reinweiss', name: 'Reinweiß strukturell', color: '#f5f5f5', extra: '+25%' },
-    { id: 'cremeweiss', name: 'Cremeweiß strukturell', color: '#fffdd0', extra: '+25%' },
-    { id: 'golden-oak', name: 'Golden Oak', color: '#b8860b', extra: '+25%' },
-    { id: 'nussbaum', name: 'Nussbaum', color: '#5c4033', extra: '+25%' },
-    { id: 'anthrazit', name: 'Anthrazit ähnlich RAL 7016', color: '#3d3d3d', extra: '+25%' },
+    { id: 'weiss', name: 'Weiß', color: '#ffffff' },
+    { id: 'reinweiss', name: 'Reinweiß strukturell', color: '#f5f5f5' },
+    { id: 'cremeweiss', name: 'Cremeweiß strukturell', color: '#fffdd0' },
+    { id: 'golden-oak', name: 'Golden Oak', color: '#b8860b' },
+    { id: 'nussbaum', name: 'Nussbaum', color: '#5c4033' },
+    { id: 'anthrazit', name: 'Anthrazit ähnlich RAL 7016', color: '#3d3d3d' },
   ]
 
   const fenstertypen = [
@@ -60,12 +60,6 @@ export default function Konfigurator() {
     { id: 'zweiteilig', name: 'Zweiteilig', image: '/fenstertyp/2_grundmodell.svg' },
     { id: 'dreiteilig', name: 'Dreiteilig', image: '/fenstertyp/3_grundmodell.svg' },
     { id: 'sondertypen', name: 'Sondertypen', image: '/fenstertyp/sondertypen-selection.svg' },
-  ]
-
-  const oberlichtOptionen = [
-    { id: 'ohne', name: 'ohne Ober-/ Unterlicht' },
-    { id: 'oberlicht', name: 'mit Oberlicht' },
-    { id: 'unterlicht', name: 'mit Unterlicht' },
   ]
 
   const oeffnungsarten = [
@@ -76,49 +70,23 @@ export default function Konfigurator() {
   ]
 
   const verglasungen = [
-    { id: '3fach-07', name: '3-fach Verglasung', ug: 'Ug 0,7', extra: '+ 17,20 €', image: '/staklo/waermeschutzisolierverglasung-3fach.avif' },
-    { id: '3fach-06', name: '3-fach Verglasung', ug: 'Ug 0,6', extra: '+ 20,15 €', image: '/staklo/waermeschutzisolierverglasung-3fach-1.avif' },
+    { id: '3fach-07', name: '3-fach Verglasung', ug: 'Ug 0,7', image: '/staklo/waermeschutzisolierverglasung-3fach.avif' },
+    { id: '3fach-06', name: '3-fach Verglasung', ug: 'Ug 0,6', image: '/staklo/waermeschutzisolierverglasung-3fach-1.avif' },
   ]
-
-  // Calculate price
-  const calculatePrice = () => {
-    let basePrice = 21.84
-    const area = (config.breite / 1000) * (config.hoehe / 1000)
-    
-    if (config.fenstertyp === 'zweiteilig') basePrice *= 1.8
-    if (config.fenstertyp === 'dreiteilig') basePrice *= 2.5
-    
-    if (config.oeffnungsart === 'drehkipp-links' || config.oeffnungsart === 'drehkipp-rechts') basePrice *= 1.3
-    if (config.oeffnungsart === 'kipp') basePrice *= 1.1
-    
-    basePrice *= area * 100
-    
-    return basePrice.toFixed(2).replace('.', ',')
-  }
-
-  const calculateSavings = () => {
-    const price = parseFloat(calculatePrice().replace(',', '.'))
-    return (price * 0.3).toFixed(2).replace('.', ',')
-  }
 
   const toggleSection = (section) => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }))
   }
 
-  // Window Technical Drawing Component - IDENTICAL to reference
   const WindowDrawing = () => {
     const drawPanels = () => {
       if (config.fenstertyp === 'einteilig') {
         return (
           <g>
-            {/* Main frame */}
             <rect x="50" y="30" width="200" height="240" fill="#e3f2fd" stroke="#1565c0" strokeWidth="3" />
-            {/* Inner frame */}
             <rect x="60" y="40" width="180" height="220" fill="#bbdefb" stroke="#1565c0" strokeWidth="2" />
-            {/* Cross lines */}
             <line x1="150" y1="40" x2="150" y2="260" stroke="#1565c0" strokeWidth="1" />
             <line x1="60" y1="150" x2="240" y2="150" stroke="#1565c0" strokeWidth="1" />
-            {/* Opening indicator based on type */}
             {(config.oeffnungsart === 'drehkipp-links' || config.oeffnungsart === 'drehkipp-rechts') && (
               <>
                 <line x1="60" y1="260" x2="150" y2="150" stroke="#1565c0" strokeWidth="1.5" />
@@ -136,19 +104,13 @@ export default function Konfigurator() {
       if (config.fenstertyp === 'zweiteilig') {
         return (
           <g>
-            {/* Main frame */}
             <rect x="50" y="30" width="200" height="240" fill="#e3f2fd" stroke="#1565c0" strokeWidth="3" />
-            {/* Left panel */}
             <rect x="60" y="40" width="85" height="220" fill="#bbdefb" stroke="#1565c0" strokeWidth="2" />
-            {/* Right panel */}
             <rect x="155" y="40" width="85" height="220" fill="#bbdefb" stroke="#1565c0" strokeWidth="2" />
-            {/* Cross lines left */}
             <line x1="102" y1="40" x2="102" y2="260" stroke="#1565c0" strokeWidth="1" />
             <line x1="60" y1="150" x2="145" y2="150" stroke="#1565c0" strokeWidth="1" />
-            {/* Cross lines right */}
             <line x1="197" y1="40" x2="197" y2="260" stroke="#1565c0" strokeWidth="1" />
             <line x1="155" y1="150" x2="240" y2="150" stroke="#1565c0" strokeWidth="1" />
-            {/* Opening indicators */}
             {(config.oeffnungsart === 'drehkipp-links' || config.oeffnungsart === 'drehkipp-rechts' || config.oeffnungsart === 'kipp') && (
               <>
                 <line x1="60" y1="260" x2="102" y2="150" stroke="#1565c0" strokeWidth="1.5" />
@@ -164,15 +126,10 @@ export default function Konfigurator() {
       if (config.fenstertyp === 'dreiteilig') {
         return (
           <g>
-            {/* Main frame */}
             <rect x="50" y="30" width="200" height="240" fill="#e3f2fd" stroke="#1565c0" strokeWidth="3" />
-            {/* Left panel */}
             <rect x="60" y="40" width="55" height="220" fill="#bbdefb" stroke="#1565c0" strokeWidth="2" />
-            {/* Center panel */}
             <rect x="122" y="40" width="56" height="220" fill="#bbdefb" stroke="#1565c0" strokeWidth="2" />
-            {/* Right panel */}
             <rect x="185" y="40" width="55" height="220" fill="#bbdefb" stroke="#1565c0" strokeWidth="2" />
-            {/* Cross lines */}
             <line x1="87" y1="40" x2="87" y2="260" stroke="#1565c0" strokeWidth="1" />
             <line x1="150" y1="40" x2="150" y2="260" stroke="#1565c0" strokeWidth="1" />
             <line x1="212" y1="40" x2="212" y2="260" stroke="#1565c0" strokeWidth="1" />
@@ -183,7 +140,6 @@ export default function Konfigurator() {
         )
       }
 
-      // Default/Sondertypen
       return (
         <g>
           <rect x="50" y="30" width="200" height="240" fill="#e3f2fd" stroke="#1565c0" strokeWidth="3" />
@@ -208,10 +164,6 @@ export default function Konfigurator() {
       </Head>
 
       <div className="min-h-screen bg-gray-50">
-        {/* Top Banner */}
-        <div className="bg-red-600 text-white text-center py-2 text-sm font-medium">
-          Bis zu -30% + 10% Mengenrabatt. | Aktion endet in 00d 05h 59m 06s
-        </div>
 
         {/* Breadcrumb */}
         <div className="bg-white border-b">
@@ -259,7 +211,6 @@ export default function Konfigurator() {
             {/* Left Column - Preview & Summary */}
             <div className="lg:col-span-4">
               <div className="bg-white rounded-lg shadow-sm border sticky top-4">
-                {/* Section Header */}
                 <div className="bg-slate-700 text-white px-4 py-2 rounded-t-lg text-sm">
                   Ihre Konfiguration <span className="text-slate-300">Innenansicht</span>
                 </div>
@@ -271,35 +222,8 @@ export default function Konfigurator() {
                   </div>
                 </div>
 
-                {/* Price */}
-                <div className="p-4 border-b">
-                  <div className="flex items-center gap-3">
-                    <span className="bg-red-600 text-white text-sm font-bold px-2 py-1 rounded">
-                      -30%
-                    </span>
-                    <div>
-                      <span className="text-2xl font-bold text-blue-900">{calculatePrice()} €</span>
-                    </div>
-                    <div className="flex gap-2 ml-auto">
-                      <button className="p-2 border rounded-lg hover:bg-gray-50">
-                        <ZoomIn className="w-5 h-5 text-gray-500" />
-                      </button>
-                      <button className="p-2 border rounded-lg hover:bg-gray-50">
-                        <Camera className="w-5 h-5 text-gray-500" />
-                      </button>
-                    </div>
-                  </div>
-                  <p className="text-sm text-gray-500 mt-1">
-                    Sie sparen {calculateSavings()} €
-                  </p>
-                  <p className="text-xs text-gray-400 mt-1">
-                    Lieferzeit 3-6 Wochen¹. Abbildung kann vom Original abweichen.
-                  </p>
-                </div>
-
                 {/* Collapsible Sections */}
                 <div>
-                  {/* Section 1 */}
                   <button 
                     onClick={() => toggleSection('profil')}
                     className="w-full flex items-center justify-between p-4 bg-slate-700 text-white"
@@ -354,7 +278,6 @@ export default function Konfigurator() {
                     </div>
                   )}
 
-                  {/* Section 2 */}
                   <button 
                     onClick={() => toggleSection('glas')}
                     className="w-full flex items-center justify-between p-4 bg-slate-700 text-white"
@@ -367,7 +290,7 @@ export default function Konfigurator() {
                       <div className="flex justify-between p-3 hover:bg-gray-50 cursor-pointer">
                         <span className="font-medium">Verglasung:</span>
                         <span className="text-gray-600 flex items-center gap-1">
-                          2-fach Verglasung
+                          {verglasungen.find(v => v.id === config.verglasung)?.ug}
                           <ChevronRight className="w-4 h-4" />
                         </span>
                       </div>
@@ -410,11 +333,8 @@ export default function Konfigurator() {
                                 <Check className="w-3 h-3 text-white" />
                               </div>
                             )}
-                            <span className="absolute top-2 left-2 bg-red-600 text-white text-[10px] px-1.5 py-0.5 rounded font-bold">
-                              {prof.discount}
-                            </span>
-                            <span className="absolute top-2 left-12 bg-green-600 text-white text-[10px] px-1.5 py-0.5 rounded font-bold">
-                              Uw-Wert<br/>≥ {prof.uw}
+                            <span className="absolute top-2 left-2 bg-green-600 text-white text-[10px] px-1.5 py-0.5 rounded font-bold">
+                              Uw-Wert ≥ {prof.uw}
                             </span>
                             <div className="aspect-square relative mb-2 mt-6">
                               <Image 
@@ -474,11 +394,6 @@ export default function Konfigurator() {
                               style={{ backgroundColor: f.color }}
                             />
                             <p className="text-[10px] font-medium text-center leading-tight">{f.name}</p>
-                            {f.extra && (
-                              <p className="text-center mt-1">
-                                <span className="bg-slate-600 text-white text-[10px] px-1.5 py-0.5 rounded">{f.extra}</span>
-                              </p>
-                            )}
                           </button>
                         ))}
                       </div>
@@ -511,7 +426,6 @@ export default function Konfigurator() {
                                 <Check className="w-3 h-3 text-white" />
                               </div>
                             )}
-                            {/* Window type images from /fenstertyp folder */}
                             <div className="h-28 flex items-center justify-center mb-2">
                               <img 
                                 src={typ.image} 
@@ -552,7 +466,6 @@ export default function Konfigurator() {
                                 <Check className="w-3 h-3 text-white" />
                               </div>
                             )}
-                            {/* Opening type - use actual SVG images */}
                             <div className="h-28 flex items-center justify-center mb-2">
                               {art.image ? (
                                 <img 
@@ -561,7 +474,6 @@ export default function Konfigurator() {
                                   className="h-full w-auto object-contain"
                                 />
                               ) : (
-                                // Festverglast - simple plus icon
                                 <div className="w-16 h-24 border-2 border-gray-400 rounded flex items-center justify-center bg-white">
                                   <div className="relative w-8 h-8">
                                     <div className="absolute top-1/2 left-0 right-0 h-0.5 bg-gray-400 -translate-y-1/2" />
@@ -664,7 +576,6 @@ export default function Konfigurator() {
                                 <Check className="w-3 h-3 text-white" />
                               </div>
                             )}
-                            {/* Glass image */}
                             <div className="h-32 flex items-center justify-center mb-3">
                               <img 
                                 src={glas.image} 
@@ -674,11 +585,6 @@ export default function Konfigurator() {
                             </div>
                             <p className="font-bold text-base text-center">{glas.ug}</p>
                             <p className="text-sm text-gray-500 text-center">{glas.name}</p>
-                            {glas.extra && (
-                              <p className="text-center mt-2">
-                                <span className="bg-slate-600 text-white text-sm px-3 py-1 rounded">{glas.extra}</span>
-                              </p>
-                            )}
                           </button>
                         ))}
                       </div>
@@ -762,7 +668,7 @@ export default function Konfigurator() {
                   <button
                     className="px-8 py-3 bg-blue-900 hover:bg-blue-700 text-white rounded-full font-medium"
                   >
-                    In den Warenkorb
+                    Anfrage senden
                   </button>
                 )}
               </div>
@@ -773,4 +679,3 @@ export default function Konfigurator() {
     </>
   )
 }
-
